@@ -26,16 +26,16 @@ def ask(request, item_id):
             item = get_object_or_404(Item, pk=item_id)
             item.question_set.create(question_text = request.POST.get('question_text'), votes = 0, question_answer= " ")
 
-            return render(request, 'items/detail.html'), {
-                'form': form,
-            }
+            return HttpResponseRedirect(reverse('items:detail', args=(item.id,)))
     else:
         form = QuestionForm()
     return render(request, 'items/detail.html'), {
         'form': form,
     }
 
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    question_text = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
-    question_answer = models.CharField(max_length=400, default='')
+def vote(request, item_id):
+    question = get_object_or_404(Question, pk=request.POST.get('id'))
+    print(request.POST.get('vote'))
+    question.votes += int(request.POST.get('vote'))
+    question.save()
+    return HttpResponseRedirect(reverse('items:detail', args=(item_id,)))

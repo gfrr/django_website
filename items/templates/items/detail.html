@@ -13,15 +13,25 @@
             {{ question.question_text }}
           </h3>
           <p>
-            {{ question.question_answer}}
+            {{ question.question_answer}} -- score: {{question.votes}}
           </p>
         </li>
+        <form action="{% url 'items:vote' item.id %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="id" value={{question.id}} />
+          <label for="downvote">downvote</label>
+          <input type="radio" name="vote" id="downvote" value= -1 />
+          <label for="upvote">upvote</label>
+          <input type="radio" name="vote" id="upvote" value= 1 />
+        <input type="submit" value="Vote" />
+        </form>
 
       {% endif %}
 {% endfor %}
 </ul>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
 
 <form action="{% url 'items:ask' item.id %}" method="post">
   {% csrf_token %}
