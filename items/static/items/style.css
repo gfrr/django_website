@@ -1,0 +1,23 @@
+.thumbnail-img {
+
+}
+
+.main {
+  margin-top: 40px;
+}
+
+.info {
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-flow: row;
+  align-items: baseline;
+  justify-content: space-around;
+}
+
+.question {
+  margin: auto;
+  text-align: center;
+}

@@ -1,43 +1,76 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'items/style.css' %}" />
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<div class="content">
+
+<div class="left">
+  <img src={{item.item_url}} alt="image" />
+</div>
+<div class="right">
+  <h1>{{ item.item_title }}</h1>
+  <p>
+    {{item.item_text}}
+  </p>
+
+  <ul>
+    <h3>
+      Questions:
+    </h3>
+  {% for question in item.question_set.all %}
+
+        {% if question.answered %}
+          <li>
+            <h4>
+              {{ question.question_text }}
+            </h4>
+            <h6>
+               Answer:  {{ question.question_answer}}
+            </h6>
+            <p>
+              score: {{question.votes}}
+            </p>
+          </li>
+          <form action="{% url 'items:vote' item.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id" value={{question.id}} />
+            <label for="downvote">-1</label>
+            <input type="radio" name="vote" id="downvote" value= -1 />
+            <label for="upvote">+1</label>
+            <input type="radio" name="vote" id="upvote" value= 1 />
+          <input class="btn btn-primary" type="submit" value="Vote" />
+          </form>
+
+        {% endif %}
+  {% endfor %}
+  </ul>
+
+  {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 
 
-<h1>{{ item.item_title }}</h1>
-<p>
-  {{item.item_text}}
-</p>
-<ul>
-{% for question in item.question_set.all %}
-      {% if question.answered %}
-        <li>
-          <h3>
-            {{ question.question_text }}
-          </h3>
-          <p>
-            {{ question.question_answer}} -- score: {{question.votes}}
-          </p>
-        </li>
-        <form action="{% url 'items:vote' item.id %}" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="id" value={{question.id}} />
-          <label for="downvote">downvote</label>
-          <input type="radio" name="vote" id="downvote" value= -1 />
-          <label for="upvote">upvote</label>
-          <input type="radio" name="vote" id="upvote" value= 1 />
-        <input type="submit" value="Vote" />
-        </form>
+</div>
 
-      {% endif %}
-{% endfor %}
-</ul>
-
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+</div>
+<div class="question">
+  <form action="{% url 'items:ask' item.id %}" method="post">
+    {% csrf_token %}
+    <label for="question_text">Ask a question: </label>
+    <input id="question_text" type="text" name="question_text">
 
 
-<form action="{% url 'items:ask' item.id %}" method="post">
-  {% csrf_token %}
-  <label for="question_text">Ask a question: </label>
-  <input id="question_text" type="text" name="question_text">
+  <input type="submit" value="Submit" />
+  </form>
 
-
-<input type="submit" value="Submit" />
-</form>
+</div>

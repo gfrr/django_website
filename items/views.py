@@ -1,23 +1,22 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
-from .models import Item, Question
 from django.template import loader
 from django.shortcuts import get_object_or_404, render
 from .forms import QuestionForm
+from .models import Item, Question
 
-def index(request):
-    latest_item_list = Item.objects.order_by('-pub_date')[:5]
-    context = {'latest_item_list': latest_item_list}
-    return render(request, 'items/index.html', context)
+class IndexView(generic.ListView):
+    template_name = 'items/index.html'
+    context_object_name = 'latest_item_list'
 
-def detail(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-    return render(request, 'items/detail.html', {'item': item})
+    def get_queryset(self):
+        return Item.objects.order_by('-pub_date')
 
-def results(request, item_id):
-    response = "You're looking at the results of item %s."
-    return HttpResponse(response % item_id)
+
+class DetailView(generic.DetailView):
+    model = Item
+    template_name = 'items/detail.html'
 
 def ask(request, item_id):
     if request.method == "POST":

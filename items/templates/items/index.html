@@ -1,9 +1,38 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'items/style.css' %}" />
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+<div class="container main">
+
+
 {% if latest_item_list %}
-    <ul>
+    <div class="row">
     {% for item in latest_item_list %}
-        <li><a href="{% url 'items:detail' item.id %}">{{ item.item_title }}</a></li>
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+          <img class="thumbnail-img" src="{{item.item_url}}" alt="image">
+
+        <div class="caption info">
+          <h4>{{item.item_title}}</h4>
+          <p><a href="{% url 'items:detail' item.id %}" class="btn btn-primary" role="button">Details</a></p>
+      </div>
+      </div>
+    </div>
     {% endfor %}
-    </ul>
+  </div>
+
 {% else %}
     <p>No items are available.</p>
 {% endif %}
+</div>
